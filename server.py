@@ -68,8 +68,12 @@ class MyWebServer(socketserver.BaseRequestHandler):
         # check if dir exists
         elif os.path.exists('www' + requested_file):
             
+            if '..' in requested_file:
+                bytearray_to_send = f'''HTTP/1.1 404 Not found\r\nConnection: close\r\n'''
+                self.request.sendall(bytearray(bytearray_to_send, 'utf-8'))
+            
             # handle user inputting just a directory
-            if os.path.isdir('www' + requested_file):
+            elif os.path.isdir('www' + requested_file):
                 
                 if requested_file[-1] == '/':
                 
